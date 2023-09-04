@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
-
 import { getDataRequest, removeProductRequest } from '../../mock-server/server';
 
 interface IProductsState {
   products: IProduct[] | null;
   categories: ICategory[] | null;
-  selectedCategory: number;
-  selectedFilter: number;
-  selectedProducts: any[];
+  selectedCategory: number | null;
+  selectedFilter: number | null;
+  selectedProducts: IProduct[];
 }
 
 export const useProductsStore = defineStore('products', {
@@ -28,7 +27,7 @@ export const useProductsStore = defineStore('products', {
       let data = [...state.products];
 
       if (state.selectedFilter) {
-        data = data.sort((a, b) => {
+        data = data.sort((a: IProduct, b: IProduct): number => {
           if (state.selectedFilter === 1) {
             return a.price > b.price ? 1 : -1;
           }
@@ -36,6 +35,8 @@ export const useProductsStore = defineStore('products', {
           if (state.selectedFilter === 2) {
             return a.price < b.price ? 1 : -1;
           }
+
+          return 0;
         });
       }
 
@@ -62,10 +63,10 @@ export const useProductsStore = defineStore('products', {
         //
       }
     },
-    setCategory(categoryId: string) {
+    setCategory(categoryId: number) {
       this.selectedCategory = +categoryId;
     },
-    setFilter(filterId: string) {
+    setFilter(filterId: number) {
       this.selectedFilter = +filterId;
     },
     setParams(params: { selectedCategory?: string; selectedFilter?: string }) {
@@ -82,9 +83,13 @@ export const useProductsStore = defineStore('products', {
       this.selectedCategory = null;
     },
     addProductToSelected(productId: number) {
+      if (!this.products) {
+        return;
+      }
+
       const product = this.products.find((product) => product.id === productId);
 
-      if (!product && ~this.products.indexOf(product)) {
+      if (!product || ~this.products.indexOf(product)) {
         return;
       }
 
@@ -102,7 +107,7 @@ export const useProductsStore = defineStore('products', {
       }
 
       await (async () => await Promise.all([...requests]))();
-      await this.fetchData();   
+      await this.fetchData();
     },
   },
 });

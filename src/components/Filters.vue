@@ -22,26 +22,26 @@ onBeforeMount(() => {
 });
 
 watch(selectedCategory, () => {
-  store.setCategory(selectedCategory.value);
+  store.setCategory(+selectedCategory.value);
   const queryParams = router.currentRoute.value.query;
   queryParams.selectedCategory = selectedCategory.value;
   const queryString = getNewRouterQueryParams(queryParams);
-  window.history.pushState({}, null, queryString);
+  window.history.pushState({}, '', queryString);
 });
 
 watch(selectedFilter, () => {
-  store.setFilter(selectedFilter.value);
+  store.setFilter(+selectedFilter.value);
   const queryParams = router.currentRoute.value.query;
   queryParams.selectedFilter = selectedFilter.value;
   const queryString = getNewRouterQueryParams(queryParams);
-  window.history.pushState({}, null, queryString);
+  window.history.pushState({}, '', queryString);
 });
 
 const clearFilters = () => {
   selectedCategory.value = '';
   selectedFilter.value = '';
   store.clearFiltersAndCategory();
-  window.history.pushState({}, null, '/');
+  window.history.pushState({}, '', '/');
 };
 
 const deleteProductSelectedProducts = async () => {

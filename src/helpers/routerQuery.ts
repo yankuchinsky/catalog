@@ -1,9 +1,9 @@
-export default function getNewRouterQueryParams(queryParams: Object) {
+export default function getNewRouterQueryParams(queryParams: { [key: string]: string | number }) {
   let queryString = '?';
 
   for (const key of Object.keys(queryParams)) {
-    if(key && queryParams[key]) {
-      queryString += `${key}=${queryParams[key]}&`
+    if (key && queryParams[key]) {
+      queryString += `${key}=${queryParams[key]}&`;
     }
   }
 

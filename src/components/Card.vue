@@ -16,6 +16,10 @@ const store = useProductsStore();
 const checked = ref(false);
 
 watch(checked, () => {
+  if (!props.id) {
+    return;
+  }
+
   if (checked.value) {
     store.addProductToSelected(+props.id);
   } else {
